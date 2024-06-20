@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload</title>
+    <style>
+        /* CSS styles for the body */
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        /* CSS styles for the form container */
+        .form-container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-top: 50px;
+        }
+        .diagnosis {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #444;
+            border-radius: 5px;
+        }
+        .diagnosis h2 {
+            color: #4CAF50;
+        }
+        .diagnosis p {
+            color: #fff;
+        }
+
+        /* CSS styles for the file input */
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #555;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* CSS styles for the submit button */
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Change submit button color on hover */
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        /* CSS styles for the image preview */
+        .image-preview {
+            margin-bottom: 20px;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Area to display the selected image -->
+        <div class="image-preview">
+            <img id="preview" src="#" alt="Image Preview">
+        </div>
+        <h2>Upload an Image</h2>
+        <form id="uploadForm">
+            <input type="file" name="file" accept="image/*" onchange="previewImage(event)">
+            <br>
+            <input type="button" value="Diagnose" onclick="saveImageSrc()">
+        </form>
+
+        <div class="diagnosis">
+            <h2>Diagnosis - </h2>
+
+            <p id="diagnosis"></p>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var imageUrl = ''; // Variable to store the image URL
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+                imageUrl = reader.result; // Store the image URL
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function saveImageSrc() {
+            var url = 'http://127.0.0.1:5000/predict';
+            var formData = new FormData();
+            var fileInput = document.querySelector('input[type="file"]');
+            formData.append('file', fileInput.files[0]);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response)
+                    document.getElementById('diagnosis').textContent = response;
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+
+
+        }
+    </script>
+</body>
+</html>
