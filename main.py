@@ -25,6 +25,10 @@ folder_name = 'uploads'
 if not os.path.exists(folder_name):
     os.mkdir(folder_name)
 
+@app.route('/')
+def hello():
+    return('hi')
+    
 @app.route('/predict',methods=['POST'])
 def predict():
 
