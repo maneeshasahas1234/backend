@@ -1,13 +1,12 @@
 {
   "version": 2,
   "builds": [
-    { "src": "main.py",
+    {
       "use": "@vercel/python",
-      config": {
-        "maxLambdaSize": "450mb"
-      } }
+      "config": {
+        "maxLambdaSize": "1050mb"
+      }
+    }
   ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/main.py" }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }
